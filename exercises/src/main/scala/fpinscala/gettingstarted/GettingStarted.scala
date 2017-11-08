@@ -172,13 +172,13 @@ object PolymorphicFunctions {
   // Note that `=>` associates to the right, so we could
   // write the return type as `A => B => C`
   def curry[A,B,C](f: (A, B) => C): A => (B => C) =
-    ???
+    (a: A) => (b: B) => f(a, b)
 
   // NB: The `Function2` trait has a `curried` method already
 
   // Exercise 4: Implement `uncurry`
   def uncurry[A,B,C](f: A => B => C): (A, B) => C =
-    ???
+    (a: A, b: B) => f(a)(b)
 
   /*
   NB: There is a method on the `Function` object in the standard library,
@@ -193,7 +193,7 @@ object PolymorphicFunctions {
   // Exercise 5: Implement `compose`
 
   def compose[A,B,C](f: B => C, g: A => B): A => C =
-    ???
+    (a: A) => f(g(a))
 }
 
 object testPolymorphicFunctions {
@@ -201,6 +201,20 @@ object testPolymorphicFunctions {
   import PolymorphicFunctions._
 
   def main(args: Array[String]): Unit = {
+
+    testIsSorted()
+    testCurrying()
+    testUncurrying()
+    testCompose()
+  }
+
+  def formatIsSorted[A](res: Boolean, array: Array[A]): String = {
+
+    if (res) s"Array ${array.mkString(",")} is sorted"
+    else s"Array ${array.mkString(",")} is not sorted"
+  }
+
+  def testIsSorted(): Unit = {
 
     val arr1: Array[Int] = Array(1, 2, 3, 4, 5, 6)
     val arr2: Array[Int] = Array(6, 5, 4, 3, 2, 1)
@@ -223,8 +237,39 @@ object testPolymorphicFunctions {
     println(formatIsSorted(isSorted(arr9, (x: Int, y: Int) => x > y), arr9))
   }
 
-  def formatIsSorted[A](res: Boolean, array: Array[A]): String = {
-    if (res) s"Array ${array.mkString(",")} is sorted"
-    else s"Array ${array.mkString(",")} is not sorted"
+  def testCurrying(): Unit = {
+
+    val a: Int => Int => Int = curry((x: Int, y: Int) => x * y)
+    val a1: Int => Int = a(2)
+    val a2: Int = a1(3)
+    println(a2)
+
+    val b: String => Int => String = curry((x: String, y: Int) => x + y.toString)
+    val b1: Int => String = b("hello")
+    val b2: String = b1(1)
+    println(b2)
+
+    val c: String => Int => (String, Int) = curry((x: String, y: Int) => (x, y))
+    val c1: Int => (String, Int) = c("hello")
+    val c2: (String, Int) = c1(1)
+    println(c2)
+  }
+
+  def testUncurrying(): Unit = {
+
+    val a = uncurry(curry((x: Int, y: Int) => x * y))
+    println(a(2, 3))
+
+    val b = uncurry(curry((x: String, y: Int) => x + y.toString))
+    println(b("hello ", 1))
+
+    val c = uncurry(curry((x: String, y: Int) => (x, y)))
+    println(c("hello", 2))
+  }
+
+  def testCompose(): Unit = {
+
+    val a: Int => Int = compose((x: Int) => x * 2 , (y: Int) => y - 2)
+    println(a(10))
   }
 }
