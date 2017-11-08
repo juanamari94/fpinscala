@@ -149,7 +149,17 @@ object PolymorphicFunctions {
 
   // Exercise 2: Implement a polymorphic function to check whether
   // an `Array[A]` is sorted
-  def isSorted[A](as: Array[A], gt: (A,A) => Boolean): Boolean = ???
+  def isSorted[A](as: Array[A], gt: (A,A) => Boolean): Boolean = {
+
+    @annotation.tailrec
+    def go(n: Int): Boolean = {
+      if (n >= as.length - 1) true
+      else if (gt(as(n), as(n + 1))) false
+      else go(n + 1)
+    }
+
+    go(0)
+  }
 
   // Polymorphic functions are often so constrained by their type
   // that they only have one implementation! Here's an example:
@@ -184,4 +194,37 @@ object PolymorphicFunctions {
 
   def compose[A,B,C](f: B => C, g: A => B): A => C =
     ???
+}
+
+object testPolymorphicFunctions {
+
+  import PolymorphicFunctions._
+
+  def main(args: Array[String]): Unit = {
+
+    val arr1: Array[Int] = Array(1, 2, 3, 4, 5, 6)
+    val arr2: Array[Int] = Array(6, 5, 4, 3, 2, 1)
+    val arr3: Array[Int] = Array(1, 3, 2, 6, 4, 5)
+    val arr4: Array[String] = Array("a", "b", "c", "d")
+    val arr5: Array[String] = Array("b", "c", "a", "d")
+    val arr6: Array[Double] = Array(1.2, 1.3, 2.1)
+    val arr7: Array[Double] = Array(1.3, 2.1, 1.4)
+    val arr8: Array[Int] = Array(1)
+    val arr9: Array[Int] = Array()
+
+    println(formatIsSorted(isSorted(arr1, (x: Int, y: Int) => x > y), arr1))
+    println(formatIsSorted(isSorted(arr2, (x: Int, y: Int) => x > y), arr2))
+    println(formatIsSorted(isSorted(arr3, (x: Int, y: Int) => x > y), arr3))
+    println(formatIsSorted(isSorted(arr4, (x: String, y: String) => x > y), arr4))
+    println(formatIsSorted(isSorted(arr5, (x: String, y: String) => x > y), arr5))
+    println(formatIsSorted(isSorted(arr6, (x: Double, y: Double) => x > y), arr6))
+    println(formatIsSorted(isSorted(arr7, (x: Double, y: Double) => x > y), arr7))
+    println(formatIsSorted(isSorted(arr8, (x: Int, y: Int) => x > y), arr8))
+    println(formatIsSorted(isSorted(arr9, (x: Int, y: Int) => x > y), arr9))
+  }
+
+  def formatIsSorted[A](res: Boolean, array: Array[A]): String = {
+    if (res) s"Array ${array.mkString(",")} is sorted"
+    else s"Array ${array.mkString(",")} is not sorted"
+  }
 }
