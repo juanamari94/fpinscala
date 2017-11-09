@@ -271,5 +271,9 @@ object testPolymorphicFunctions {
 
     val a: Int => Int = compose((x: Int) => x * 2 , (y: Int) => y - 2)
     println(a(10))
+
+    val a1: Int => String = (x: Int) => x.toString
+    val b1: String => Double = (x: String) => x.toDouble
+    println(b1(a1(10)))
   }
 }
