@@ -72,7 +72,15 @@ object List { // `List` companion object. Contains functions for creating and wo
     case Cons(h, t) => Cons(h, t)
   }
 
-  def init[A](l: List[A]): List[A] = ???
+  def init[A](l: List[A]): List[A] = l match {
+    case Nil => Nil
+    case Cons(_, Nil) => Nil
+    case Cons(h, t) => Cons(h, init(t))
+  }
+
+  def foldedProduct(l: List[Double]): Double = {
+    foldRight(l, 0.0)((x, y) => if (x == 0 || y == 0) 0 else x * y)
+  }
 
   def length[A](l: List[A]): Int = ???
 
@@ -106,5 +114,17 @@ object testList {
     println(List.dropWhile(list, (x: Int) => x < 3))
     println(List.dropWhile(list, (x: Int) => x < 7))
     println(List.dropWhile(list, (x: Int) => x < 4))
+
+    println("\ninit")
+    println(List.init(List(1, 2, 3)))
+    println(List.init(List()))
+    println(List.init(List(1, 2, 3, 4, 5, 6)))
+
+
+    println("\nfoldedproduct stopping early")
+    println(List.foldedProduct(List(1, 2, 3)))
+    println(List.foldedProduct(List(0, 1, 2)))
+    println(List.foldedProduct(List(1, 0, 2, 3)))
+    // Nope, won't work. foldRight evaluates all values before calling the function f, so it will just return 0.
   }
 }
