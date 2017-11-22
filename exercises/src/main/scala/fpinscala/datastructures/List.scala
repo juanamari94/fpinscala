@@ -82,9 +82,15 @@ object List { // `List` companion object. Contains functions for creating and wo
     foldRight(l, 0.0)((x, y) => if (x == 0 || y == 0) 0 else x * y)
   }
 
-  def length[A](l: List[A]): Int = ???
+  def length[A](l: List[A]): Int = {
+    foldRight(l, 0)((_, y) => y + 1)
+  }
 
-  def foldLeft[A,B](l: List[A], z: B)(f: (B, A) => B): B = ???
+  @annotation.tailrec
+  def foldLeft[A,B](l: List[A], z: B)(f: (B, A) => B): B = l match {
+      case Nil => z
+      case Cons(h, t) => foldLeft(t, f(z, h))(f)
+  }
 
   def map[A,B](l: List[A])(f: A => B): List[B] = ???
 }
@@ -126,5 +132,16 @@ object testList {
     println(List.foldedProduct(List(0, 1, 2)))
     println(List.foldedProduct(List(1, 0, 2, 3)))
     // Nope, won't work. foldRight evaluates all values before calling the function f, so it will just return 0.
+
+    println("\nlength of a list")
+    println(List.length(List(1, 2, 3)))
+    println(List.length(List()))
+    println(List.length(List(1, 2, 3, 4)))
+    println(List.length(List(1)))
+
+    println("\nfoldleft")
+    println(List.foldLeft(List(1, 2, 3, 4), 0)(_ + _))
+    println(List.foldLeft(List(1, 2, 3, 4), 1)(_ * _))
+    println(List.foldLeft(List("a", "b", "c", "d"), "")(_ + _))
   }
 }
