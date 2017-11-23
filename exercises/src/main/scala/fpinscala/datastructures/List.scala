@@ -92,6 +92,10 @@ object List { // `List` companion object. Contains functions for creating and wo
       case Cons(h, t) => foldLeft(t, f(z, h))(f)
   }
 
+  def reverse[A](l: List[A]): List[A] = {
+    List.foldLeft(l, List[A]())((acc, y) => Cons(y, acc))
+  }
+
   def map[A,B](l: List[A])(f: A => B): List[B] = ???
 }
 
@@ -140,8 +144,18 @@ object testList {
     println(List.length(List(1)))
 
     println("\nfoldleft")
-    println(List.foldLeft(List(1, 2, 3, 4), 0)(_ + _))
-    println(List.foldLeft(List(1, 2, 3, 4), 1)(_ * _))
-    println(List.foldLeft(List("a", "b", "c", "d"), "")(_ + _))
+    println("foldLeft sum: " + List.foldLeft(List(1, 2, 3, 4), 0)(_ + _))
+    println("foldLeft product: " + List.foldLeft(List(1, 2, 3, 4), 1)(_ * _))
+    println("foldLeft string concatenation: " + List.foldLeft(List("a", "b", "c", "d"), "")(_ + _))
+    println("foldLeft length: " + List.foldLeft(List(1, 2, 3, 4), 0)((x, _) => x + 1))
+    println("foldLeft length: " + List.foldLeft(List(1, 2, 3), 0)((x, _) => x + 1))
+    println("foldLeft length: " + List.foldLeft(List(1), 0)((x, _) => x + 1))
+    println("foldLeft length: " + List.foldLeft(List(), 0)((x, _) => x + 1))
+
+    println("\nreverse")
+    println("reverse: " + List.reverse(List(1, 2, 3, 4)))
+    println("reverse: " + List.reverse(List()))
+    println("reverse: " + List.reverse(List("a", "b", "c")))
+    println("reverse: " + List.reverse(List(1)))
   }
 }
