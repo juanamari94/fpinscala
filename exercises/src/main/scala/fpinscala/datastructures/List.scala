@@ -100,6 +100,10 @@ object List { // `List` companion object. Contains functions for creating and wo
 
   def foldRightViaFoldLeft[A, B](l: List[A], z: B)(f: (B, A) => B): B = List.foldLeft(List.reverse(l), z)(f)
 
+  def appendViaFoldLeft[A](l: List[A], r: List[A]): List[A] = List.foldLeft(l, r)((acc, h) => Cons(h, acc))
+
+  def concat[A](l: List[List[A]]): List[A] = foldLeft(l, Nil:List[A])(append)
+
   def map[A,B](l: List[A])(f: A => B): List[B] = ???
 }
 
@@ -161,5 +165,14 @@ object testList {
     println("reverse: " + List.reverse(List()))
     println("reverse: " + List.reverse(List("a", "b", "c")))
     println("reverse: " + List.reverse(List(1)))
+
+    println("\nappend with foldLeft")
+    println(List.appendViaFoldLeft(List(1, 2, 3), List(4, 5, 6)))
+    println(List.appendViaFoldLeft(List("a", "b"), List("b", "c")))
+    println(List.appendViaFoldLeft(List(), List("a")))
+    println(List.appendViaFoldLeft(List(), List()))
+
+    println("\nconcat")
+    println(List.concat(List(List(1, 2, 3), List(4, 5))))
   }
 }
