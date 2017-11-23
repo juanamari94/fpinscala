@@ -104,6 +104,21 @@ object List { // `List` companion object. Contains functions for creating and wo
 
   def concat[A](l: List[List[A]]): List[A] = foldLeft(l, Nil:List[A])(append)
 
+  def addOne(l: List[Int]): List[Int] = l match {
+    case Nil => Nil
+    case Cons(h, t) => Cons(h + 1, addOne(t))
+  }
+
+  def addOneFolded(l: List[Int]): List[Int] = foldRight(l, Nil:List[Int])((h, t) => Cons(h + 1, t))
+
+  def doubleToString(l: List[Double]): List[String] = l match {
+    case Nil => Nil
+    case Cons(h, t) => Cons(h.toString, doubleToString(t))
+  }
+
+  def doubleToStringFolded(l: List[Double]): List[String] =
+    foldRight(l: List[Double], Nil:List[String])((h, t) => Cons(h.toString, t))
+
   def map[A,B](l: List[A])(f: A => B): List[B] = ???
 }
 
@@ -174,5 +189,25 @@ object testList {
 
     println("\nconcat")
     println(List.concat(List(List(1, 2, 3), List(4, 5))))
+
+    println("\naddone")
+    println(List.addOne(List(1, 2, 3, 4)))
+    println(List.addOne(List()))
+    println(List.addOne(List(1)))
+
+    println("\ndoubletostring")
+    println(List.doubleToString(List(1, 2, 3, 4)))
+    println(List.doubleToString(List()))
+    println(List.doubleToString(List(1)))
+
+    println("\naddonefolded")
+    println(List.addOneFolded(List(1, 2, 3, 4)))
+    println(List.addOneFolded(List()))
+    println(List.addOneFolded(List(1)))
+
+    println("\ndoubletostringfolded")
+    println(List.doubleToStringFolded(List(1, 2, 3, 4)))
+    println(List.doubleToStringFolded(List()))
+    println(List.doubleToStringFolded(List(1)))
   }
 }
