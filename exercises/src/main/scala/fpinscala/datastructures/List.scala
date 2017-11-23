@@ -96,6 +96,10 @@ object List { // `List` companion object. Contains functions for creating and wo
     List.foldLeft(l, List[A]())((acc, y) => Cons(y, acc))
   }
 
+  def foldLeftViaFoldRight[A, B](l: List[A], z: B)(f: (A, B) => B): B = List.foldRight(l, z)(f)
+
+  def foldRightViaFoldLeft[A, B](l: List[A], z: B)(f: (B, A) => B): B = List.foldLeft(List.reverse(l), z)(f)
+
   def map[A,B](l: List[A])(f: A => B): List[B] = ???
 }
 
