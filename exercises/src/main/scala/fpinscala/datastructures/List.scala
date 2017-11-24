@@ -119,10 +119,8 @@ object List { // `List` companion object. Contains functions for creating and wo
   def doubleToStringFolded(l: List[Double]): List[String] =
     foldRight(l: List[Double], Nil:List[String])((h, t) => Cons(h.toString, t))
 
-  // t is tail, h is head, why is it backwards I'm not sure, the signature is reversed in the book for foldleft
-  def map[A,B](l: List[A])(f: A => B): List[B] = foldLeft(l, Nil:List[B])((t, h) => Cons(f(h), t))
-
-  def foldRightMap[A,B](l: List[A])(f: A => B): List[B] = foldRight(l, Nil:List[B])((h, t) => Cons(f(h), t))
+  // t is tail, h is head, why is it backwards I'm not sure, the signature is reversed in the book for foldLeft
+  def map[A,B](l: List[A])(f: A => B): List[B] = foldRight(l, Nil:List[B])((h, t) => Cons(f(h), t))
 }
 
 object testList {
