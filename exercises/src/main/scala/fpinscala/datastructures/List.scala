@@ -121,6 +121,24 @@ object List { // `List` companion object. Contains functions for creating and wo
 
   // t is tail, h is head, why is it backwards I'm not sure, the signature is reversed in the book for foldLeft
   def map[A,B](l: List[A])(f: A => B): List[B] = foldRight(l, Nil:List[B])((h, t) => Cons(f(h), t))
+
+  def filter[A](as: List[A])(f: A => Boolean): List[A] = foldRight(as, Nil:List[A])((h, t) => if (f(h)) Cons(h, t) else t)
+
+  def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = concat(map(as)(f))
+
+  def flatFilter[A](as: List[A])(f: A => Boolean): List[A] = flatMap(as)(x => if (f(x)) List(x) else Nil)
+
+  def zipInts(a: List[Int], b: List[Int]): List[Int] = (a, b) match {
+    case (_, Nil) => a
+    case (Nil, _) => b
+    case (Cons(h1, t1), Cons(h2, t2)) => Cons(h1 + h2, zipInts(t1, t2))
+  }
+
+  def zipWith[A](a: List[A], b: List[A])(f: (A, A) => A): List[A] = (a, b) match {
+    case (_, Nil) => a
+    case (Nil, _) => b
+    case (Cons(h1, t1), Cons(h2, t2)) => Cons(f(h1, h2), zipWith(t1, t2)(f))
+  }
 }
 
 object testList {
@@ -214,5 +232,17 @@ object testList {
     println("\nmap")
     println(List.map(List(1, 2, 3, 4))(x => x * 2))
     println(List.map(List("1", "2", "3", "4"))(x => x + "a"))
+
+    println("\nfilter")
+    println(List.filter(List(1, 2, 3, 4))(x => x % 2 == 0))
+
+    println("\nflatmap")
+    println(List.flatMap(List(1, 2, 3))(i => List(i, i)))
+
+    println("\nzipints")
+    println(List.zipInts(List(1, 2, 3), List(4, 5, 6)))
+
+    println("\nzipWith")
+    println(List.zipWith(List(1, 2, 3), List(4, 5, 6))((x, y) => x + y))
   }
 }
