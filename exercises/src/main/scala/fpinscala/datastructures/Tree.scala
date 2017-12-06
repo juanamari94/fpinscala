@@ -19,7 +19,12 @@ object Tree {
 
   def depth[A](tree: Tree[A]): Int = tree match {
     case Leaf(_) => 0
-    case Branch(left, right) => 1 + depth(left).max(depth(right))
+    case Branch(left, right) => 1 + (depth(left) max depth(right))
+  }
+
+  def map[A, B](tree: Tree[A])(f: A => B): Tree[B] = tree match {
+    case Leaf(a) => Leaf(f(a))
+    case Branch(left, right) => Branch(map(left)(f), map(right)(f))
   }
 }
 
@@ -42,5 +47,8 @@ object testTree {
     println(Tree.depth(Leaf(1)))
     println(Tree.depth(Branch(Leaf(1), Leaf(2))))
     println(Tree.depth(Branch(Branch(Leaf(3), Leaf(4)), Leaf(2))))
+
+    println("\nmap")
+    println(Tree.map(Branch(Leaf(1), Leaf(2)))(value => value + 1))
   }
 }
